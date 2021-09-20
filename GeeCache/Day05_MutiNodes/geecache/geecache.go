@@ -112,6 +112,7 @@ func (g *Group) addToCache(key string, val ByteView) {
 	g.mainCache.add(key, val)
 }
 
+// RegisterPeers 实现了 PeerPicker 接口的 HTTPPool 注入到 Group 中。
 func (g *Group) RegisterPeers(picker PeerPicker) {
 	if g.peers != nil {
 		panic("[RegisterPeers] func called more than once!")

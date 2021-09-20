@@ -17,8 +17,9 @@ func TestGet(t *testing.T)  {
 	}
 	lru := New(int64(0), nil)
 	lru.Add("key1", String("1234"))
+	lru.Add("key1", String("2345"))
 	if get, ok := lru.Get("key1"); !ok || string(get.(String)) != "1234" {
-		t.Fatal("cache hit key1 = 1234 failed!")
+		t.Fatal("cache hit key1 = 1234 failed!", get.(String))
 	}
 	if _, ok := lru.Get("key2"); !ok {
 		t.Fatal("cache missed key2 failed!")

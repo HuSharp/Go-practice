@@ -17,6 +17,7 @@ type Getter interface {
 	利用这种类型转换，我们可以将此类型的函数转换为一个 Getter 对象，
 	而不需要定义一个结构体，再让这个结构实现 Get 方法。
 */
+// GetterFunc 是一个实现了接口的函数类型，简称为接口型函数
 type GetterFunc func(key string) ([]byte, error)
 
 func (f GetterFunc) Get(key string) ([]byte, error) {
@@ -67,7 +68,7 @@ func (g *Group) Get(key string) (ByteView, error) {
 		return ByteView{}, fmt.Errorf("key is empty")
 	}
 	if v, ok := g.mainCache.get(key); ok {
-		log.Println("[Get] Cache Hit!")
+		log.Println("[GeeCache.Get] Cache Hit!")
 		return v, nil
 	}
 	// 如果缓存没有，就从本地加载

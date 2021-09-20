@@ -1,11 +1,11 @@
-package Day01
+package main
 
 import (
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
 
-func main() {
+func main2() {
 	r := gin.Default()
 	r.GET("/", func(context *gin.Context) {
 		context.String(200, "Hello!\n")

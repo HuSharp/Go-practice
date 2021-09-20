@@ -78,7 +78,7 @@ func main() {
 	if api {
 		go startAPIServer(apiAddr, geeGroup)
 	}
-	startCacheServer(serverAddrMap[port], []string(serverAddrs), geeGroup)
+	startCacheServer(serverAddrMap[port], serverAddrs, geeGroup)
 }
 
 func httpEscape()  {

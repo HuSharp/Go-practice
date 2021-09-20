@@ -28,6 +28,7 @@ type HTTPPool struct {
 	httpGetters	map[string]*httpGetter	// 映射远程节点与对应的 httpGetter
 }
 
+// 实现 PeerGetter 接口
 func (h *httpGetter) Get(group string, key string) ([]byte, error) {
 	u := fmt.Sprintf(
 		"%v%v/%v",
@@ -60,7 +61,7 @@ func (p *HTTPPool) Set(peers ...string) {
 	p.peers = consistenthash.New(defaultReplicas, nil)
 	p.peers.Add(peers...)
 	p.httpGetters = make(map[string]*httpGetter, len(peers))
-	for _, peer := range peers{
+	for _, peer := range peers {
 		p.httpGetters[peer] = &httpGetter{baseURL: peer + p.basePath}
 	}
 }

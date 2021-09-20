@@ -4,7 +4,7 @@ import "container/list"
 
 type Cache struct {
 	maxBytes	int64		// 允许使用最大内存
-	usedBytes		int64		// 已经使用的内存
+	usedBytes	int64		// 已经使用的内存
 	ll			*list.List	// 双向链表
 	cache		map[string]*list.Element	// 队首为 最新的
 	OnEvicted	func(key string, value Value)	//	如果回调函数 OnEvicted 不为 nil，则调用回调函数。
