@@ -21,6 +21,7 @@ func (f Foo) Sum(args Args, reply *int) error {
 
 // 在 startServer 中使用了信道 addr，确保服务端端口监听成功，客户端再发起请求。
 func startServer(addr chan string)  {
+	log.Println("[startServer] begin")
 	var foo Foo
 	if err := geerpc.Register(&foo); err != nil {
 		log.Fatal("[startServer] register err: ", err)
@@ -40,7 +41,7 @@ func main() {
 	// 接下来发送消息头 h := &codec.Header{}，和消息体 geeRpc req ${h.Seq}。
 
 	// 删除所有标志，包括时间戳
-	log.SetFlags(0)
+	//log.SetFlags(0)
 	addr := make(chan string)
 	go startServer(addr)
 	client, _ := geerpc.Dial("tcp", <-addr)

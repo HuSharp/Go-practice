@@ -182,6 +182,7 @@ func (server *Server) readRequest(cc codec.Codec) (*request, error) {
 	// 创建出两个入参实例
 	req.argv = req.mtype.newArgv()
 	req.replyVal = req.mtype.newReplyVal()
+	req.svc, req.mtype, err = server.findService(header.ServiceMethod)
 
 	// make sure that argvI is a pointer, ReadBody need a pointer as parameter
 	argvI := req.argv.Interface()
