@@ -60,7 +60,7 @@ func (p *HTTPPool) Set(peers ...string) {
 	p.peers = consistenthash.New(defaultReplicas, nil)
 	p.peers.Add(peers...)
 	p.httpGetters = make(map[string]*httpGetter, len(peers))
-	for _, peer := range peers{
+	for _, peer := range peers {
 		p.httpGetters[peer] = &httpGetter{baseURL: peer + p.basePath}
 	}
 }
