@@ -26,13 +26,15 @@ func (schema *Schema) GetField(name string) *Field {
 }
 
 func Parse(dest interface{}, d dialect.Dialect) *Schema {
+	// reflect.Indirect() 获取指针指向的实例
 	modelType := reflect.Indirect(reflect.ValueOf(dest)).Type()
-	schema := &Schema{
+	schema := &Schema {
 		Model:    dest,
 		Name:     modelType.Name(),	// 结构体的名称作为表名
 		filedMap: make(map[string]*Field),
 	}
 
+	// NumField() 获取实例的字段的个数，然后通过下标获取到特定字段 p := modelType.Field(i)
 	for i := 0; i < modelType.NumField(); i++ {
 		field := modelType.Field(i)
 		//  IsExported 报告名称是否为导出的 Go 符号（即，它是否以大写字母开头）。

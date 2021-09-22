@@ -20,6 +20,5 @@ func TestParse(t *testing.T) {
 	if schema.GetField("Name").Tag != "PRIMARY KEY" {
 		t.Fatal("failed to parse primary key!")
 	}
-	t.Log("---------------------")
 	t.Log("success test parse!")
 }

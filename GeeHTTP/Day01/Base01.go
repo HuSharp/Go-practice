@@ -1,4 +1,4 @@
-package Day01
+package main
 
 import (
 	"fmt"
@@ -7,18 +7,19 @@ import (
 	"strings"
 )
 
-//func Base01() {
-//	//http.HandleFunc("/", indexHandler)
-//	http.HandleFunc("/", say)
-//	err := http.ListenAndServe(":9091", nil)
-//	if err != nil {
-//		log.Fatal("ListenAndServe: ", err)
-//	}
-//}
+func main() {
+	//http.HandleFunc("/", indexHandler)
+	http.HandleFunc("/", say)
+	err := http.ListenAndServe(":9091", nil)
+	if err != nil {
+		log.Fatal("ListenAndServe: ", err)
+	}
+}
 
-func Base01() {
+func main1() {
 	http.HandleFunc("/", indexHandler)
 	http.HandleFunc("/hello", helloHandler)
+	// nil 代表使用标准库中的实例处理
 	log.Fatal(http.ListenAndServe(":9999", nil))
 }
 

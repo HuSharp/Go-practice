@@ -12,7 +12,7 @@ import (
 func (s *Session) Insert(values ...interface{}) (int64, error) {
 	recordValues := make([]interface{}, 0)
 	for _, value := range values {
-		s.CallMethod(BeforeInsert, value)
+		s.CallMethod(BeforeInsert, value)	// 这是 Hook 相关
 		table := s.Model(value).RefTable()
 		s.clause.Set(clause.INSERT, table.Name, table.FieldNames)
 		recordValues = append(recordValues, table.RecordValues(value))// 平铺数据

@@ -32,9 +32,9 @@ func (p *HTTPPool) ServeHTTP(w http.ResponseWriter, r *http.Request) {
 	if !strings.HasPrefix(r.URL.Path, p.basePath) {
 		panic("HTTPPool serving unexpected path: " + r.URL.Path)
 	}
-	p.Log("%s %s", r.Method, r.URL.Path)
-	// /<basepath>/<groupname>/<key> required
-	parts := strings.SplitN(r.URL.Path[len(p.basePath):], "/", 2)// 返回前两个
+	p.Log("[ServeHTTP] %s %s", r.Method, r.URL.Path)
+	// 约定访问路径格式为：/<basepath>/<groupname>/<key> required
+	parts := strings.SplitN(r.URL.Path[len(p.basePath):], "/", 2)// 返回 basepath 后的前两个
 	if len(parts) != 2 {
 		http.Error(w, "bad request", http.StatusBadRequest)
 		return
