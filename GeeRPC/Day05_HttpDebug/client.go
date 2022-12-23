@@ -17,12 +17,12 @@ import (
 )
 
 type Call struct {
-	Seq				uint64
-	ServiceMethod	string			// format "<service>.<method>"
-	Args			interface{}
-	Reply			interface{}
-	Error 			error
-	Done 			chan *Call		// 当调用结束时，会调用 call.done() 通知调用方。
+	Seq           uint64
+	ServiceMethod string // format "<service>.<method>"
+	Args          interface{}
+	Reply         interface{}
+	Error         error
+	Done          chan *Call // 当调用结束时，会调用 call.done() 通知调用方。
 }
 
 func (call *Call) done() {
@@ -37,25 +37,26 @@ header 是每个请求的消息头，header 只有在请求发送时才需要，
 seq 用于给发送的请求编号，每个请求拥有唯一编号。
 pending 存储未处理完的请求，键是编号，值是 Call 实例。
 closing 和 shutdown 任意一个值置为 true，则表示 Client 处于不可用的状态，但有些许的差别，
+
 	closing 是用户主动关闭的，即调用 Close 方法，
 	而 shutdown 置为 true 一般是有错误发生。
- */
+*/
 type Client struct {
-	cc			codec.Codec
-	mu 			sync.Mutex		// 保证整个 client 的发送成功
-	sending		sync.Mutex		// 保证 client 的多个请求报文不混淆
-	header 		codec.Header
-	seq			uint64
-	pending		map[uint64]*Call	// 存储未处理完的请求，键是编号，值是 Call 实例。
-	closing		bool		// 一般是用户主动调用 Close 方法进行关闭
-	shutdown	bool		// 一般是有错误发生 server 要求关闭
-	option		*Option
+	cc       codec.Codec
+	mu       sync.Mutex // 保证整个 client 的发送成功
+	sending  sync.Mutex // 保证 client 的多个请求报文不混淆
+	header   codec.Header
+	seq      uint64
+	pending  map[uint64]*Call // 存储未处理完的请求，键是编号，值是 Call 实例。
+	closing  bool             // 一般是用户主动调用 Close 方法进行关闭
+	shutdown bool             // 一般是有错误发生 server 要求关闭
+	option   *Option
 }
 
 /*
-	创建 Client 实例对象
- */
-func NewClient(conn net.Conn, option *Option) (*Client, error)  {
+创建 Client 实例对象
+*/
+func NewClient(conn net.Conn, option *Option) (*Client, error) {
 	codecFunc := codec.NewCodecFuncMap[option.CodecType]
 	if codecFunc == nil {
 		err := fmt.Errorf("invalid codec type %s", option.CodecType)
@@ -83,7 +84,7 @@ func newClientCodec(cc codec.Codec, option *Option) *Client {
 	return client
 }
 
-func parseOptions(options ...*Option) (*Option, error)  {
+func parseOptions(options ...*Option) (*Option, error) {
 	// if params is nil, 或者放了一个 nil 参数
 	if len(options) == 0 || options[0] == nil {
 		return DefaultOption, nil
@@ -101,11 +102,11 @@ func parseOptions(options ...*Option) (*Option, error)  {
 }
 
 /*
-	Client 的超时处理
- */
+Client 的超时处理
+*/
 type clientResult struct {
 	client *Client
-	err		error
+	err    error
 }
 
 type newClientFunc func(conn net.Conn, opt *Option) (client *Client, err error)
@@ -131,7 +132,7 @@ func dialTimeout(clientFunc newClientFunc, network, address string, opts ...*Opt
 	// 使用子协程执行 NewClient，执行完成后则通过信道 ch 发送结果
 	go func() {
 		client, err := clientFunc(conn, options)
-		ch <- clientResult{client:client, err: err}
+		ch <- clientResult{client: client, err: err}
 	}()
 
 	if options.ConnectTimeout == 0 {
@@ -154,13 +155,13 @@ func Dial(network, address string, opts ...*Option) (*Client, error) {
 
 /*
 	Client 的发送功能
- */
+*/
 // Call 函数
 func (client *Client) Call(ctx context.Context, serviceMethod string, args, reply interface{}) error {
 	call := client.Go(serviceMethod, args, reply, make(chan *Call, 1))
 
 	select {
-	case <- ctx.Done():
+	case <-ctx.Done():
 		client.removeCall(call.Seq)
 		return errors.New("rpc client: call failed: " + ctx.Err().Error())
 	case call = <-call.Done:
@@ -216,8 +217,8 @@ func (client *Client) send(call *Call) {
 }
 
 /*
-	receive Client 的接收功能
- */
+receive Client 的接收功能
+*/
 func (client *Client) receive() {
 	var err error
 	for err == nil {
@@ -252,7 +253,7 @@ func (client *Client) receive() {
 registerCall：将参数 call 添加到 client.pending 中，并更新 client.seq。
 removeCall：根据 seq，从 client.pending 中移除对应的 call，并返回。
 terminateCalls：服务端或客户端发生错误时调用，将 shutdown 设置为 true，且将错误信息通知所有 pending 状态的 call。
- */
+*/
 func (client *Client) registerCall(call *Call) (uint64, error) {
 	client.mu.Lock()
 	defer client.mu.Unlock()
@@ -289,7 +290,7 @@ func (client *Client) terminateCalls(err error) {
 
 /*
 	关闭功能
- */
+*/
 
 var ErrShutdown = errors.New("connection is shutdown")
 
@@ -312,10 +313,9 @@ func (client *Client) IsAvailable() bool {
 	return !client.shutdown && !client.closing
 }
 
-
 /*
 客户端支持 HTTP  发起 CONNECT 请求，检查返回状态码即可成功建立连接。
- */
+*/
 func NewHTTPClient(conn net.Conn, opt *Option) (*Client, error) {
 	_, _ = io.WriteString(conn, fmt.Sprintf("CONNECT %s HTTP/1.0 \n\n", defaultRPCPath))
 
@@ -336,7 +336,7 @@ func DialHTTP(network, address string, opts ...*Option) (*Client, error) {
 }
 
 // XDial calls different func to connect to a RPC server
-// according to first param rpcAddr
+// according to Lexer param rpcAddr
 // rpcAddr is a general format (protocol@addr) to represent a rpc server
 // eg, http@10.0.0.1:7001, tcp@10.0.0.1:9999, unix@/tmp/geerpc.sock
 func XDial(rpcAddr string, options ...*Option) (*Client, error) {

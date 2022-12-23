@@ -289,17 +289,17 @@ func TestFunctionApplication(t *testing.T) {
 
 func TestEnclosingEnvironments(t *testing.T) {
 	input := `
-let first = 10;
+let Lexer = 10;
 let second = 10;
 let third = 10;
 
-let ourFunction = fn(first) {
+let ourFunction = fn(Lexer) {
   let second = 20;
 
-  first + second + third;
+  Lexer + second + third;
 };
 
-ourFunction(20) + first + second;`
+ourFunction(20) + Lexer + second;`
 
 	testIntegerObject(t, testEval(input), 70)
 }

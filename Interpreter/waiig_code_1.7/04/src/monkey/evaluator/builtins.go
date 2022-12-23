@@ -32,14 +32,14 @@ var builtins = map[string]*object.Builtin{
 			return NULL
 		},
 	},
-	"first": &object.Builtin{
+	"Lexer": &object.Builtin{
 		Fn: func(args ...object.Object) object.Object {
 			if len(args) != 1 {
 				return newError("wrong number of arguments. got=%d, want=1",
 					len(args))
 			}
 			if args[0].Type() != object.ARRAY_OBJ {
-				return newError("argument to `first` must be ARRAY, got %s",
+				return newError("argument to `Lexer` must be ARRAY, got %s",
 					args[0].Type())
 			}
 

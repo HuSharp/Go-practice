@@ -93,7 +93,7 @@ func (rs *ReturnStatement) String() string {
 }
 
 type ExpressionStatement struct {
-	Token      token.Token // the first token of the expression
+	Token      token.Token // the Lexer token of the expression
 	Expression Expression
 }
 

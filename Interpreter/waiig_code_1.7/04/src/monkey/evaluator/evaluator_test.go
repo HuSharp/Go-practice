@@ -301,17 +301,17 @@ func TestFunctionApplication(t *testing.T) {
 
 func TestEnclosingEnvironments(t *testing.T) {
 	input := `
-let first = 10;
+let Lexer = 10;
 let second = 10;
 let third = 10;
 
-let ourFunction = fn(first) {
+let ourFunction = fn(Lexer) {
   let second = 20;
 
-  first + second + third;
+  Lexer + second + third;
 };
 
-ourFunction(20) + first + second;`
+ourFunction(20) + Lexer + second;`
 
 	testIntegerObject(t, testEval(input), 70)
 }
@@ -369,9 +369,9 @@ func TestBuiltinFunctions(t *testing.T) {
 		{`len([1, 2, 3])`, 3},
 		{`len([])`, 0},
 		{`puts("hello", "world!")`, nil},
-		{`first([1, 2, 3])`, 1},
-		{`first([])`, nil},
-		{`first(1)`, "argument to `first` must be ARRAY, got INTEGER"},
+		{`Lexer([1, 2, 3])`, 1},
+		{`Lexer([])`, nil},
+		{`Lexer(1)`, "argument to `Lexer` must be ARRAY, got INTEGER"},
 		{`last([1, 2, 3])`, 3},
 		{`last([])`, nil},
 		{`last(1)`, "argument to `last` must be ARRAY, got INTEGER"},
