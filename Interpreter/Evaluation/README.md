@@ -1,6 +1,7 @@
 
 
 Show Code
+
 ```python
 Welcome to Monkey Language!
 >> let x = 1 * 2 * 3 * 4 * 5
@@ -25,5 +26,30 @@ Woops! We ran into some monkey business here!
  parser errors:
 	expected next token to be =, got INT instead
 >> 
+```
+
+For Function
+```python
+ >> let addTwo = fn(x) { x + 2; };
+>> addTwo(2)
+4
+>> let multiply = fn(x, y) { x * y };
+>> multiply(50 / 2, 1 * 2)
+50
+>> fn(x) { x == 10 }(5)
+false
+>> fn(x) { x == 10 }(10)
+true
+```
+
+For Closure
+```python
+>> let add = fn(a, b) { a + b };
+>> let sub = fn(a, b) { a - b };
+>> let applyFunc = fn(a, b, func) { func(a, b) };
+>> applyFunc(2, 2, add);
+4
+>> applyFunc(10, 2, sub);
+8
 ```
 

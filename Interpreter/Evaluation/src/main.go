@@ -7,6 +7,6 @@ import (
 )
 
 func main() {
-	fmt.Println("Welcome to Monkey Language!")
+	fmt.Println("Welcome to be friends with HuSharp's Rabbit!")
 	repl.Start(os.Stdin, os.Stdout)
 }
