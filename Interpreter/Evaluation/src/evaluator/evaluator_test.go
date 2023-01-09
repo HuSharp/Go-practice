@@ -274,7 +274,7 @@ func TestFunctionApplication(t *testing.T) {
 	}
 }
 
-func TestRabbit(t *testing.T) {
+func TestClosure(t *testing.T) {
 	input := `
 let Lexer = 10;
 let second = 10;

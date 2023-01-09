@@ -53,3 +53,38 @@ For Closure
 8
 ```
 
+For Index
+```python
+>> [1, 2, 3, 4]
+[1, 2, 3, 4]
+>> let double = fn(x) { x * 2 };
+>> [1, double(2), 3 * 3, 4 - 3]
+[1, 4, 9, 1]
+```
+
+For Array Index
+```python
+>> let a = [1, 2 * 2, 10 - 5, 8 / 2];
+>> a[0]
+1
+>> a[2]
+5
+>> a[99]
+null
+```
+
+For Builtin Func
+```python
+>> let a = [1, 2, 3, 4];
+>> let b = push(a, 5);
+>> a
+[1, 2, 3, 4]
+>> b
+[1, 2, 3, 4, 5]
+>> rest(a)
+[2, 3, 4]
+>> first(a)
+1
+>> last(b)
+5
+```

@@ -1,8 +1,9 @@
 package lexer
 
 import (
-	"src/token"
 	"testing"
+
+	"monkey/token"
 )
 
 func TestNextToken(t *testing.T) {
@@ -27,7 +28,9 @@ if (5 < 10) {
 10 != 9;
 "foobar"
 "foo bar"
- [1, 2];
+[1, 2];
+{"foo": "bar"}
+macro(x, y) { x + y; };
 `
 
 	tests := []struct {
@@ -114,6 +117,24 @@ if (5 < 10) {
 		{token.COMMA, ","},
 		{token.INT, "2"},
 		{token.RBRACKET, "]"},
+		{token.SEMICOLON, ";"},
+		{token.LBRACE, "{"},
+		{token.STRING, "foo"},
+		{token.COLON, ":"},
+		{token.STRING, "bar"},
+		{token.RBRACE, "}"},
+		{token.MACRO, "macro"},
+		{token.LPAREN, "("},
+		{token.IDENT, "x"},
+		{token.COMMA, ","},
+		{token.IDENT, "y"},
+		{token.RPAREN, ")"},
+		{token.LBRACE, "{"},
+		{token.IDENT, "x"},
+		{token.PLUS, "+"},
+		{token.IDENT, "y"},
+		{token.SEMICOLON, ";"},
+		{token.RBRACE, "}"},
 		{token.SEMICOLON, ";"},
 		{token.EOF, ""},
 	}
