@@ -11,18 +11,13 @@ let x = ((((1 * 2) * 3) * 4) * 5);
 >> true == false
 (true == false)
 >> let x 12 * 3;
-            __,__
-   .--.  .-"     "-.  .--.
-  / .. \/  .-. .-.  \/ .. \
- | |  '|  /   Y   \  |'  | |
- | \   \  \ 0 | 0 /  /   / |
-  \ '- ,\.-"""""""-./, -' /
-   ''-' /_   ^ ^   _\ '-''
-       |  \._   _./  |
-       \   \ '~' /   /
-        '._ '-=-' _.'
-           '-----'
-Woops! We ran into some monkey business here!
+                 
+       /\_/\
+       || ||  	
+      ( o.o )
+        >^<
+       /   \
+Woops! We jumped down the rabbit hole!
  parser errors:
 	expected next token to be =, got INT instead
 >> 
@@ -98,4 +93,11 @@ For Hash
 Alice
 >> people[1]["name"]
 Anna
+```
+
+For print
+```python
+>> puts("hello world!")
+hello world!
+null
 ```
