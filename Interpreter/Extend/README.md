@@ -88,3 +88,14 @@ For Builtin Func
 >> last(b)
 5
 ```
+
+For Hash
+```python
+>> {"name": "Monkey", "age": 0, "type": "Language", "status": "awesome"}
+{status: awesome, name: Monkey, age: 0, type: Language}
+>> let people = [{"name": "Alice", "age": 24}, {"name": "Anna", "age": 28}];
+>> people[0]["name"]
+Alice
+>> people[1]["name"]
+Anna
+```
