@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="AutoImportSettings">
+    <option name="autoReloadType" value="ALL" />
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="c8de4a99-3706-46cb-8887-0cec124bcb12" name="Changes" comment="">
+      <change beforePath="$PROJECT_DIR$/../.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/Compiler.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/../.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Bytecode.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/code/code.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/code/code.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/compiler.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compiler.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/compiler/compiler_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/compiler/compiler_test.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/repl/repl.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/repl/repl.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/vm/vm.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/vm/vm.go" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/vm/vm_test.go" beforeDir="false" afterPath="$PROJECT_DIR$/src/vm/vm_test.go" afterDir="false" />
+    </list>
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="GOROOT" url="file:///opt/homebrew/Cellar/go/1.19/libexec" />
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/../.." />
+  </component>
+  <component name="MarkdownSettingsMigration">
+    <option name="stateVersion" value="1" />
+  </component>
+  <component name="ProjectId" id="2LkiXlLEL5OvGu7FLoM9lMQD7Me" />
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "RunOnceActivity.go.formatter.settings.were.checked": "true",
+    "RunOnceActivity.go.migrated.go.modules.settings": "true",
+    "RunOnceActivity.go.modules.go.list.on.any.changes.was.set": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "go.import.settings.migrated": "true",
+    "go.sdk.automatically.set": "true",
+    "last_opened_file_path": "/Users/pingcap/CS/go/Go-practice/Compiler",
+    "node.js.detected.package.eslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "nodejs_package_manager_path": "npm"
+  }
+}]]></component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/../" />
+      <recent name="$PROJECT_DIR$" />
+      <recent name="$PROJECT_DIR$/.." />
+    </key>
+  </component>
+  <component name="RunManager" selected="Go Test.TestIntegerArithmetic in src/vm">
+    <configuration name="go build src" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
+      <module name="Bytecode" />
+      <working_directory value="$PROJECT_DIR$/src" />
+      <kind value="PACKAGE" />
+      <package value="src" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$/src/main.go" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestInstructionsString in src/code" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="Bytecode" />
+      <working_directory value="$PROJECT_DIR$/src/code" />
+      <root_directory value="$PROJECT_DIR$/src" />
+      <kind value="PACKAGE" />
+      <package value="src/code" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTestInstructionsString\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestIntegerArithmetic in src/compiler" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="Bytecode" />
+      <working_directory value="$PROJECT_DIR$/src/compiler" />
+      <root_directory value="$PROJECT_DIR$/src" />
+      <kind value="PACKAGE" />
+      <package value="src/compiler" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTestIntegerArithmetic\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestIntegerArithmetic in src/vm" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="Bytecode" />
+      <working_directory value="$PROJECT_DIR$/src/vm" />
+      <root_directory value="$PROJECT_DIR$/src" />
+      <kind value="PACKAGE" />
+      <package value="src/vm" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTestIntegerArithmetic\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestMake in src/code" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="Bytecode" />
+      <working_directory value="$PROJECT_DIR$/src/code" />
+      <root_directory value="$PROJECT_DIR$/src" />
+      <kind value="PACKAGE" />
+      <package value="src/code" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTestMake\E$" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Go Test.TestIntegerArithmetic in src/vm" />
+        <item itemvalue="Go Test.TestIntegerArithmetic in src/compiler" />
+        <item itemvalue="Go Build.go build src" />
+        <item itemvalue="Go Test.TestInstructionsString in src/code" />
+        <item itemvalue="Go Test.TestMake in src/code" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="VgoProject">
+    <settings-migrated>true</settings-migrated>
+  </component>
+</project>
