@@ -55,7 +55,7 @@
       <recent name="$PROJECT_DIR$/.." />
     </key>
   </component>
-  <component name="RunManager" selected="Go Test.TestIntegerArithmetic in src/vm">
+  <component name="RunManager" selected="Go Test.TestBooleanExpressions in src/vm">
     <configuration name="go build src" type="GoApplicationRunConfiguration" factoryName="Go Application" temporary="true" nameIsGenerated="true">
       <module name="Bytecode" />
       <working_directory value="$PROJECT_DIR$/src" />
@@ -65,16 +65,28 @@
       <filePath value="$PROJECT_DIR$/src/main.go" />
       <method v="2" />
     </configuration>
-    <configuration name="TestInstructionsString in src/code" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+    <configuration name="TestBooleanExpressions in src/compiler" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
       <module name="Bytecode" />
-      <working_directory value="$PROJECT_DIR$/src/code" />
+      <working_directory value="$PROJECT_DIR$/src/compiler" />
       <root_directory value="$PROJECT_DIR$/src" />
       <kind value="PACKAGE" />
-      <package value="src/code" />
+      <package value="src/compiler" />
       <directory value="$PROJECT_DIR$" />
       <filePath value="$PROJECT_DIR$" />
       <framework value="gotest" />
-      <pattern value="^\QTestInstructionsString\E$" />
+      <pattern value="^\QTestBooleanExpressions\E$" />
+      <method v="2" />
+    </configuration>
+    <configuration name="TestBooleanExpressions in src/vm" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
+      <module name="Bytecode" />
+      <working_directory value="$PROJECT_DIR$/src/vm" />
+      <root_directory value="$PROJECT_DIR$/src" />
+      <kind value="PACKAGE" />
+      <package value="src/vm" />
+      <directory value="$PROJECT_DIR$" />
+      <filePath value="$PROJECT_DIR$" />
+      <framework value="gotest" />
+      <pattern value="^\QTestBooleanExpressions\E$" />
       <method v="2" />
     </configuration>
     <configuration name="TestIntegerArithmetic in src/compiler" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
@@ -101,25 +113,13 @@
       <pattern value="^\QTestIntegerArithmetic\E$" />
       <method v="2" />
     </configuration>
-    <configuration name="TestMake in src/code" type="GoTestRunConfiguration" factoryName="Go Test" temporary="true" nameIsGenerated="true">
-      <module name="Bytecode" />
-      <working_directory value="$PROJECT_DIR$/src/code" />
-      <root_directory value="$PROJECT_DIR$/src" />
-      <kind value="PACKAGE" />
-      <package value="src/code" />
-      <directory value="$PROJECT_DIR$" />
-      <filePath value="$PROJECT_DIR$" />
-      <framework value="gotest" />
-      <pattern value="^\QTestMake\E$" />
-      <method v="2" />
-    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Go Test.TestBooleanExpressions in src/vm" />
+        <item itemvalue="Go Test.TestBooleanExpressions in src/compiler" />
         <item itemvalue="Go Test.TestIntegerArithmetic in src/vm" />
         <item itemvalue="Go Test.TestIntegerArithmetic in src/compiler" />
         <item itemvalue="Go Build.go build src" />
-        <item itemvalue="Go Test.TestInstructionsString in src/code" />
-        <item itemvalue="Go Test.TestMake in src/code" />
       </list>
     </recent_temporary>
   </component>
