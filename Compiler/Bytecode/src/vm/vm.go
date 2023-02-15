@@ -35,7 +35,6 @@ func (vm *VM) Run() error {
 		switch op {
 		case code.OpConstant:
 			constantIndex := code.ReadUint16(vm.instructions[ip+1:])
-			fmt.Println("run ", constantIndex)
 			ip += 2
 			if err := vm.push(vm.constants[constantIndex]); err != nil {
 				return err
@@ -55,7 +54,15 @@ func (vm *VM) Run() error {
 		case code.OpPop:
 			vm.pop()
 		case code.OpEqual, code.OpNotEqual, code.OpGreaterThan:
-			if err := vm.executeBinaryOperation(op); err != nil {
+			if err := vm.executeComparison(op); err != nil {
+				return err
+			}
+		case code.OpBang:
+			if err := vm.executeBangOperator(); err != nil {
+				return err
+			}
+		case code.OpMinus:
+			if err := vm.executeMinusOperator(); err != nil {
 				return err
 			}
 		}
@@ -89,9 +96,33 @@ func (vm *VM) pop() object.Object {
 	return o
 }
 
+func (vm *VM) executeBangOperator() error {
+	operand := vm.pop()
+
+	switch operand {
+	case True:
+		return vm.push(False)
+	case False:
+		return vm.push(True)
+	default:
+		return vm.push(False)
+	}
+}
+
+func (vm *VM) executeMinusOperator() error {
+	operand := vm.pop()
+
+	if operand.Type() != object.INTEGER_OBJ {
+		return fmt.Errorf("unsupported type for negation: %s", operand.Type())
+	}
+
+	value := operand.(*object.Integer).Value
+	return vm.push(&object.Integer{Value: -value})
+}
+
 func (vm *VM) executeBinaryOperation(op code.Opcode) error {
-	left := vm.pop()
 	right := vm.pop()
+	left := vm.pop()
 
 	if left.Type() == object.INTEGER_OBJ && right.Type() == object.INTEGER_OBJ {
 		return vm.executeBinaryIntegerOperation(op, left, right)
@@ -101,8 +132,8 @@ func (vm *VM) executeBinaryOperation(op code.Opcode) error {
 }
 
 func (vm *VM) executeComparison(op code.Opcode) error {
-	left := vm.pop()
 	right := vm.pop()
+	left := vm.pop()
 
 	if left.Type() == object.INTEGER_OBJ && right.Type() == object.INTEGER_OBJ {
 		return vm.executeIntegerComparison(op, left, right)
@@ -123,8 +154,8 @@ func (vm *VM) executeIntegerComparison(
 	op code.Opcode,
 	left, right object.Object,
 ) error {
-	rightVal := right.(*object.Integer).Value
 	leftVal := left.(*object.Integer).Value
+	rightVal := right.(*object.Integer).Value
 
 	switch op {
 	case code.OpEqual:
@@ -132,7 +163,7 @@ func (vm *VM) executeIntegerComparison(
 	case code.OpNotEqual:
 		return vm.push(nativeBoolToBooleanObject(rightVal != leftVal))
 	case code.OpGreaterThan:
-		return vm.push(nativeBoolToBooleanObject(rightVal > leftVal))
+		return vm.push(nativeBoolToBooleanObject(leftVal > rightVal))
 	}
 	return nil
 }
