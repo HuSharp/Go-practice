@@ -88,6 +88,56 @@ func TestBooleanExpressions(t *testing.T) {
 				code.Make(code.OpPop),
 			},
 		},
+		{
+			input:             "1 < 2",
+			expectedConstants: []interface{}{2, 1},
+			expectedInstructions: []code.Instructions{
+				code.Make(code.OpConstant, 0),
+				code.Make(code.OpConstant, 1),
+				code.Make(code.OpGreaterThan),
+				code.Make(code.OpPop),
+			},
+		},
+		{
+			input:             "1 == 2",
+			expectedConstants: []interface{}{1, 2},
+			expectedInstructions: []code.Instructions{
+				code.Make(code.OpConstant, 0),
+				code.Make(code.OpConstant, 1),
+				code.Make(code.OpEqual),
+				code.Make(code.OpPop),
+			},
+		},
+		{
+			input:             "1 != 2",
+			expectedConstants: []interface{}{1, 2},
+			expectedInstructions: []code.Instructions{
+				code.Make(code.OpConstant, 0),
+				code.Make(code.OpConstant, 1),
+				code.Make(code.OpNotEqual),
+				code.Make(code.OpPop),
+			},
+		},
+		{
+			input:             "true == false",
+			expectedConstants: []interface{}{},
+			expectedInstructions: []code.Instructions{
+				code.Make(code.OpTrue),
+				code.Make(code.OpFalse),
+				code.Make(code.OpEqual),
+				code.Make(code.OpPop),
+			},
+		},
+		{
+			input:             "true != false",
+			expectedConstants: []interface{}{},
+			expectedInstructions: []code.Instructions{
+				code.Make(code.OpTrue),
+				code.Make(code.OpFalse),
+				code.Make(code.OpNotEqual),
+				code.Make(code.OpPop),
+			},
+		},
 	}
 	runCompilerTest(t, tests)
 }
@@ -120,13 +170,13 @@ func testInstructions(expected []code.Instructions, actual code.Instructions) er
 	concat := concatInstructions(expected)
 
 	if len(concat) != len(actual) {
-		return fmt.Errorf("wrong instructions length.\nwant: %q\ngot: %q",
+		return fmt.Errorf("wrong instructions length.\nwant: %q\n got: %q",
 			concat.String(), actual)
 	}
 
 	for i, ins := range concat {
 		if actual[i] != ins {
-			return fmt.Errorf("wrong instruction at %d.\nwant: %q\ngot: %q",
+			return fmt.Errorf("wrong instruction at %d.\nwant: %q\n got: %q",
 				i, concat.String(), actual)
 		}
 	}
@@ -147,7 +197,7 @@ func testConstants(t *testing.T,
 	actual []object.Object,
 ) error {
 	if len(expected) != len(actual) {
-		return fmt.Errorf("wrong number of constants.\nwant: %q\ngot: %q",
+		return fmt.Errorf("wrong number of constants.\nwant: %q\n got: %q",
 			expected, actual)
 	}
 
@@ -170,7 +220,7 @@ func testIntegerObject(expected int64, actual object.Object) error {
 	}
 
 	if result.Value != expected {
-		return fmt.Errorf("object has wrong value.\nwant: %d\n, got: %d",
+		return fmt.Errorf("object has wrong value.\nwant: %d\n got: %d",
 			result.Value, expected)
 	}
 	return nil

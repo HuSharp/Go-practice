@@ -54,6 +54,10 @@ func (vm *VM) Run() error {
 			}
 		case code.OpPop:
 			vm.pop()
+		case code.OpEqual, code.OpNotEqual, code.OpGreaterThan:
+			if err := vm.executeBinaryOperation(op); err != nil {
+				return err
+			}
 		}
 	}
 	return nil
@@ -86,8 +90,8 @@ func (vm *VM) pop() object.Object {
 }
 
 func (vm *VM) executeBinaryOperation(op code.Opcode) error {
-	right := vm.pop()
 	left := vm.pop()
+	right := vm.pop()
 
 	if left.Type() == object.INTEGER_OBJ && right.Type() == object.INTEGER_OBJ {
 		return vm.executeBinaryIntegerOperation(op, left, right)
@@ -96,12 +100,49 @@ func (vm *VM) executeBinaryOperation(op code.Opcode) error {
 		left.Type(), right.Type())
 }
 
-func (vm *VM) executeBinaryIntegerOperation(
+func (vm *VM) executeComparison(op code.Opcode) error {
+	left := vm.pop()
+	right := vm.pop()
+
+	if left.Type() == object.INTEGER_OBJ && right.Type() == object.INTEGER_OBJ {
+		return vm.executeIntegerComparison(op, left, right)
+	}
+
+	switch op {
+	case code.OpEqual:
+		return vm.push(nativeBoolToBooleanObject(left == right))
+	case code.OpNotEqual:
+		return vm.push(nativeBoolToBooleanObject(left != right))
+	default:
+		return fmt.Errorf("unsupported types for comparison: %s %s",
+			left.Type(), right.Type())
+	}
+}
+
+func (vm *VM) executeIntegerComparison(
 	op code.Opcode,
 	left, right object.Object,
 ) error {
 	rightVal := right.(*object.Integer).Value
 	leftVal := left.(*object.Integer).Value
+
+	switch op {
+	case code.OpEqual:
+		return vm.push(nativeBoolToBooleanObject(rightVal == leftVal))
+	case code.OpNotEqual:
+		return vm.push(nativeBoolToBooleanObject(rightVal != leftVal))
+	case code.OpGreaterThan:
+		return vm.push(nativeBoolToBooleanObject(rightVal > leftVal))
+	}
+	return nil
+}
+
+func (vm *VM) executeBinaryIntegerOperation(
+	op code.Opcode,
+	left, right object.Object,
+) error {
+	leftVal := left.(*object.Integer).Value
+	rightVal := right.(*object.Integer).Value
 
 	var result int64
 	switch op {
@@ -121,4 +162,11 @@ func (vm *VM) executeBinaryIntegerOperation(
 		return err
 	}
 	return nil
+}
+
+func nativeBoolToBooleanObject(input bool) *object.Boolean {
+	if input {
+		return True
+	}
+	return False
 }
