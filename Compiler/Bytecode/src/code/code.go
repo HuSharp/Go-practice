@@ -47,7 +47,8 @@ func (ins Instructions) fmtInstruction(def *Definition, operands []int) string {
 type Opcode byte
 
 const (
-	OpConstant Opcode = iota
+	OpNull Opcode = iota
+	OpConstant
 	OpPop
 	OpAdd
 	OpSub
@@ -60,6 +61,8 @@ const (
 	OpGreaterThan // >=
 	OpMinus       // -
 	OpBang        // !
+	OpJumpNotTruthy
+	OpJump
 )
 
 type Definition struct {
@@ -68,6 +71,7 @@ type Definition struct {
 }
 
 var definitions = map[Opcode]*Definition{
+	OpNull:     {"OpNull", []int{}},
 	OpConstant: {"OpConstant", []int{2}},
 	OpPop:      {"OpPop", []int{}},
 	// Infix Expression
@@ -84,6 +88,9 @@ var definitions = map[Opcode]*Definition{
 	// Prefix Expression
 	OpMinus: {"OpMinus", []int{}},
 	OpBang:  {"OpBang", []int{}},
+	// Conditional
+	OpJumpNotTruthy: {"OpJumpNotTruthy", []int{2}},
+	OpJump:          {"OpJump", []int{2}},
 }
 
 func Lookup(op byte) (*Definition, error) {

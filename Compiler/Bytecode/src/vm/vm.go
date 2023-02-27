@@ -20,6 +20,8 @@ type VM struct {
 var True = &object.Boolean{Value: true}
 var False = &object.Boolean{Value: false}
 
+var Null = &object.NULL{}
+
 func New(bytecode *compiler.Bytecode) *VM {
 	return &VM{
 		constants:    bytecode.Constants,
@@ -33,6 +35,10 @@ func (vm *VM) Run() error {
 	for ip := 0; ip < len(vm.instructions); ip++ {
 		op := code.Opcode(vm.instructions[ip])
 		switch op {
+		case code.OpNull:
+			if err := vm.push(Null); err != nil {
+				return err
+			}
 		case code.OpConstant:
 			constantIndex := code.ReadUint16(vm.instructions[ip+1:])
 			ip += 2
@@ -64,6 +70,21 @@ func (vm *VM) Run() error {
 		case code.OpMinus:
 			if err := vm.executeMinusOperator(); err != nil {
 				return err
+			}
+		case code.OpJump:
+			pos := int(code.ReadUint16(vm.instructions[ip+1:]))
+			ip = pos - 1
+		case code.OpJumpNotTruthy:
+			pos := int(code.ReadUint16(vm.instructions[ip+1:]))
+			// Skip over the two bytes of the operand in the next cycle
+			ip += 2
+
+			condition := vm.pop()
+			// Get condition value, If the value is truthy
+			// we do nothing and start another iteration of the main loop.
+			// We can see `condition_opcode.png` in code source
+			if !isTruthy(condition) {
+				ip = pos - 1
 			}
 		}
 	}
@@ -102,7 +123,7 @@ func (vm *VM) executeBangOperator() error {
 	switch operand {
 	case True:
 		return vm.push(False)
-	case False:
+	case False, Null:
 		return vm.push(True)
 	default:
 		return vm.push(False)
@@ -200,4 +221,15 @@ func nativeBoolToBooleanObject(input bool) *object.Boolean {
 		return True
 	}
 	return False
+}
+
+func isTruthy(obj object.Object) bool {
+	switch obj := obj.(type) {
+	case *object.Boolean:
+		return obj.Value
+	case *object.NULL:
+		return false
+	default:
+		return true
+	}
 }
