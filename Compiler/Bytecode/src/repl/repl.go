@@ -6,6 +6,7 @@ import (
 	"io"
 	"src/compiler"
 	"src/lexer"
+	"src/object"
 	"src/parser"
 	"src/vm"
 )
@@ -15,6 +16,8 @@ const PROMPT = ">> "
 func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
 
+	symbolTable := compiler.NewSymbolTable()
+	globalObjects := make([]object.Object, vm.GlobalsSize)
 	for {
 		fmt.Printf(PROMPT)
 		scanned := scanner.Scan()
@@ -32,13 +35,13 @@ func Start(in io.Reader, out io.Writer) {
 			continue
 		}
 
-		comp := compiler.New()
+		comp := compiler.New(compiler.WithSymbolTable(symbolTable))
 		if err := comp.Compile(program); err != nil {
 			fmt.Fprintf(out, "Woops! Compilation failed:\n %s\n", err)
 			continue
 		}
 
-		machine := vm.New(comp.Bytecode())
+		machine := vm.New(comp.Bytecode(), vm.WithGlobalObjects(globalObjects))
 		if err := machine.Run(); err != nil {
 			fmt.Fprintf(out, "Woops! Executing bytecode failed:\n %s\n", err)
 			continue

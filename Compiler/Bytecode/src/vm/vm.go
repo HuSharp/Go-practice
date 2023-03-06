@@ -7,7 +7,10 @@ import (
 	"src/object"
 )
 
-const StackSize = 2048
+const (
+	StackSize   = 2048
+	GlobalsSize = 65536
+)
 
 type VM struct {
 	constants    []object.Object
@@ -15,6 +18,8 @@ type VM struct {
 
 	stack []object.Object
 	sp    int // Always points to the next value. Top of stack is stack[sp-1]
+
+	globals []object.Object
 }
 
 var True = &object.Boolean{Value: true}
@@ -22,13 +27,29 @@ var False = &object.Boolean{Value: false}
 
 var Null = &object.NULL{}
 
-func New(bytecode *compiler.Bytecode) *VM {
-	return &VM{
+// CreateOption create a ResourceGroupsController with the optional settings.
+type CreateOption func(vm *VM)
+
+// WithGlobalObjects is the option to create Compiler with a global objects.
+func WithGlobalObjects(globals []object.Object) CreateOption {
+	return func(vm *VM) {
+		vm.globals = globals
+	}
+}
+
+func New(bytecode *compiler.Bytecode, opts ...CreateOption) *VM {
+	vm := &VM{
 		constants:    bytecode.Constants,
 		instructions: bytecode.Instructions,
 		stack:        make([]object.Object, StackSize),
 		sp:           0,
+		globals:      make([]object.Object, GlobalsSize),
 	}
+	for _, opt := range opts {
+		opt(vm)
+	}
+
+	return vm
 }
 
 func (vm *VM) Run() error {
@@ -85,6 +106,18 @@ func (vm *VM) Run() error {
 			// We can see `condition_opcode.png` in code source
 			if !isTruthy(condition) {
 				ip = pos - 1
+			}
+		case code.OpSetGlobal:
+			globalIndex := code.ReadUint16(vm.instructions[ip+1:])
+			ip += 2
+
+			vm.globals[globalIndex] = vm.pop()
+		case code.OpGetGlobal:
+			globalIndex := code.ReadUint16(vm.instructions[ip+1:])
+			ip += 2
+
+			if err := vm.push(vm.globals[globalIndex]); err != nil {
+				return err
 			}
 		}
 	}

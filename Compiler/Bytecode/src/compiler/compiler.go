@@ -13,6 +13,8 @@ type Compiler struct {
 
 	lastInstruction     EmittedInstruction
 	previousInstruction EmittedInstruction
+
+	symbolTable *SymbolTable
 }
 
 type EmittedInstruction struct {
@@ -20,13 +22,28 @@ type EmittedInstruction struct {
 	Position int
 }
 
-func New() *Compiler {
-	return &Compiler{
+// CreateOption create a Compiler with the optional settings.
+type CreateOption func(compiler *Compiler)
+
+// WithSymbolTable is the option to create Compiler with a specific symbol table .
+func WithSymbolTable(table *SymbolTable) CreateOption {
+	return func(compiler *Compiler) {
+		compiler.symbolTable = table
+	}
+}
+
+func New(opts ...CreateOption) *Compiler {
+	compiler := &Compiler{
 		instructions:        code.Instructions{},
 		constants:           []object.Object{},
 		lastInstruction:     EmittedInstruction{},
 		previousInstruction: EmittedInstruction{},
+		symbolTable:         NewSymbolTable(),
 	}
+	for _, opt := range opts {
+		opt(compiler)
+	}
+	return compiler
 }
 
 func (c *Compiler) Compile(node ast.Node) error {
@@ -143,6 +160,18 @@ func (c *Compiler) Compile(node ast.Node) error {
 				return err
 			}
 		}
+	case *ast.LetStatement:
+		if err := c.Compile(node.Value); err != nil {
+			return err
+		}
+		symbol := c.symbolTable.Define(node.Name.Value)
+		c.emit(code.OpSetGlobal, symbol.Index)
+	case *ast.Identifier:
+		symbol, ok := c.symbolTable.Resolve(node.Value)
+		if !ok {
+			return fmt.Errorf("undefined variable %s", node.Value)
+		}
+		c.emit(code.OpGetGlobal, symbol.Index)
 	}
 
 	return nil
