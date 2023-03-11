@@ -67,6 +67,15 @@ func (b *Boolean) expressionNode()      {}
 func (b *Boolean) TokenLiteral() string { return b.Token.Literal }
 func (b *Boolean) String() string       { return b.Token.Literal }
 
+type StringLiteral struct {
+	Token token.Token
+	Value string
+}
+
+func (sl *StringLiteral) expressionNode()      {}
+func (sl *StringLiteral) TokenLiteral() string { return sl.Token.Literal }
+func (sl *StringLiteral) String() string       { return sl.Token.Literal }
+
 type PrefixExpression struct {
 	Token    token.Token // The operator token, e.g. -: `-1`
 	Operator string
@@ -235,5 +244,62 @@ func (ce *CallExpression) String() string {
 	out.WriteString(strings.Join(args, ", "))
 	out.WriteString(")")
 
+	return out.String()
+}
+
+type ArrayLiteral struct {
+	Token    token.Token // the '[' token
+	Elements []Expression
+}
+
+func (al *ArrayLiteral) expressionNode()      {}
+func (al *ArrayLiteral) TokenLiteral() string { return al.Token.Literal }
+func (al *ArrayLiteral) String() string {
+	var out bytes.Buffer
+	var elements []string
+	for _, el := range al.Elements {
+		elements = append(elements, el.String())
+	}
+	out.WriteString("[")
+	out.WriteString(strings.Join(elements, ", "))
+	out.WriteString("]")
+	return out.String()
+}
+
+type IndexExpression struct {
+	Token token.Token // The [ token
+	Left  Expression
+	Index Expression
+}
+
+func (ie *IndexExpression) expressionNode()      {}
+func (ie *IndexExpression) TokenLiteral() string { return ie.Token.Literal }
+func (ie *IndexExpression) String() string {
+	var out bytes.Buffer
+
+	out.WriteString("(")
+	out.WriteString(ie.Left.String())
+	out.WriteString("[")
+	out.WriteString(ie.Index.String())
+	out.WriteString("])")
+	return out.String()
+}
+
+type HashLiteral struct {
+	Token token.Token // the '{' token
+	Pairs map[Expression]Expression
+}
+
+func (hl *HashLiteral) expressionNode()      {}
+func (hl *HashLiteral) TokenLiteral() string { return hl.Token.Literal }
+func (hl *HashLiteral) String() string {
+	var out bytes.Buffer
+	var pairs []string
+	for key, val := range hl.Pairs {
+		pairs = append(pairs, key.String()+":"+val.String())
+	}
+	out.WriteString("{")
+	out.WriteString(strings.Join(pairs, ", "))
+	out.WriteString("}")
 	return out.String()
 }

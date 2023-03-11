@@ -116,6 +116,9 @@ func (c *Compiler) Compile(node ast.Node) error {
 		} else {
 			c.emit(code.OpFalse)
 		}
+	case *ast.StringLiteral:
+		stringLiteral := &object.String{Value: node.Value}
+		c.emit(code.OpConstant, c.addConstant(stringLiteral))
 	case *ast.IfExpression:
 		if err := c.Compile(node.Condition); err != nil {
 			return err

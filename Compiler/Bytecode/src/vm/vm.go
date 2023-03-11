@@ -181,6 +181,10 @@ func (vm *VM) executeBinaryOperation(op code.Opcode) error {
 	if left.Type() == object.INTEGER_OBJ && right.Type() == object.INTEGER_OBJ {
 		return vm.executeBinaryIntegerOperation(op, left, right)
 	}
+	if left.Type() == object.STRING_OBJ && right.Type() == object.STRING_OBJ {
+		return vm.executeBinaryStringOperation(op, left, right)
+	}
+
 	return fmt.Errorf("unsupported types for binary operation: %s %s",
 		left.Type(), right.Type())
 }
@@ -244,6 +248,22 @@ func (vm *VM) executeBinaryIntegerOperation(
 	}
 
 	if err := vm.push(&object.Integer{Value: result}); err != nil {
+		return err
+	}
+	return nil
+}
+
+func (vm *VM) executeBinaryStringOperation(
+	op code.Opcode,
+	left, right object.Object,
+) error {
+	if op != code.OpAdd {
+		return fmt.Errorf("unknown string operator: %d", op)
+	}
+	leftVal := left.(*object.String).Value
+	rightVal := right.(*object.String).Value
+
+	if err := vm.push(&object.String{Value: leftVal + rightVal}); err != nil {
 		return err
 	}
 	return nil
