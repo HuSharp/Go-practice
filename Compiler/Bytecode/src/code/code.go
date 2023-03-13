@@ -65,6 +65,9 @@ const (
 	OpJump
 	OpGetGlobal
 	OpSetGlobal
+	OpArray
+	OpHash
+	OpIndex
 )
 
 type Definition struct {
@@ -96,6 +99,10 @@ var definitions = map[Opcode]*Definition{
 	// Bind Value
 	OpGetGlobal: {"OpGetGlobal", []int{2}},
 	OpSetGlobal: {"OpSetGlobal", []int{2}},
+	// Array as composite data type, operand: the number of elements in an array literal
+	OpArray: {"OpArray", []int{2}},
+	OpHash:  {"OpHash", []int{2}},
+	OpIndex: {"OpIndex", []int{}},
 }
 
 func Lookup(op byte) (*Definition, error) {

@@ -46,6 +46,38 @@ func TestStringExpressions(t *testing.T) {
 	runVmTests(t, tests)
 }
 
+func TestArrayLiterals(t *testing.T) {
+	tests := []vmTestCase{
+		{"[]", []int{}},
+		{"[1, 2, 3]", []int{1, 2, 3}},
+		{"[1 + 2, 3 * 4, 5 + 6]", []int{3, 12, 11}},
+	}
+	runVmTests(t, tests)
+}
+
+func TestHashLiterals(t *testing.T) {
+	tests := []vmTestCase{
+		{
+			"{}", map[object.HashKey]int64{},
+		},
+		{
+			"{1: 2, 2: 3}",
+			map[object.HashKey]int64{
+				(&object.Integer{Value: 1}).HashKey(): 2,
+				(&object.Integer{Value: 2}).HashKey(): 3,
+			},
+		},
+		{
+			"{1 + 1: 2 * 2, 3 + 3: 4 * 4}",
+			map[object.HashKey]int64{
+				(&object.Integer{Value: 2}).HashKey(): 4,
+				(&object.Integer{Value: 6}).HashKey(): 16,
+			},
+		},
+	}
+	runVmTests(t, tests)
+}
+
 func TestBooleanExpressions(t *testing.T) {
 	tests := []vmTestCase{
 		{"true", true},
@@ -68,6 +100,23 @@ func TestBooleanExpressions(t *testing.T) {
 		{"(1 > 2) == true", false},
 		{"(1 > 2) == false", true},
 		{"!(if (false) { 5; })", true},
+	}
+	runVmTests(t, tests)
+}
+
+func TestIndexExpressions(t *testing.T) {
+	tests := []vmTestCase{
+		{"[1, 2, 3][1]", 2},
+		{"[1, 2, 3][0 + 2]", 3},
+		{"[[1, 1, 1]][0][0]", 1},
+		{"[][0]", Null},
+		{"[1, 2, 3][99]", Null},
+		{"[1][-1]", Null},
+		{"{1: 1, 2: 2}[1]", 1},
+		{"{1: 1, 2: 2}[2]", 2},
+		{"{1: 1}[0]", Null},
+		{"{}[0]", Null},
+		//{"{"one": 1}"},
 	}
 	runVmTests(t, tests)
 }
@@ -135,6 +184,14 @@ func testExpectedObject(t *testing.T,
 		if err := testBooleanObject(expected, actual); err != nil {
 			t.Errorf("testIntegerObject failed: %s", err)
 		}
+	case []int:
+		if err := testArrayObject(expected, actual); err != nil {
+			t.Errorf("testIntegerObject failed: %s", err)
+		}
+	case map[object.HashKey]int64:
+		if err := testHashObject(expected, actual); err != nil {
+			t.Errorf("testIntegerObject failed: %s", err)
+		}
 	case *object.NULL:
 		if actual != Null {
 			t.Errorf("object is not Null: %T (%+v)", actual, actual)
@@ -158,7 +215,7 @@ func testIntegerObject(expected int64, obj object.Object) error {
 func testStringObject(expected string, obj object.Object) error {
 	result, ok := obj.(*object.String)
 	if !ok {
-		return fmt.Errorf("object is not Integer. got=%T (%+v)",
+		return fmt.Errorf("object is not String. got=%T (%+v)",
 			obj, obj)
 	}
 	if result.Value != expected {
@@ -177,6 +234,50 @@ func testBooleanObject(expected bool, obj object.Object) error {
 	if result.Value != expected {
 		return fmt.Errorf("object has wrong value. got=%t, want=%t",
 			result.Value, expected)
+	}
+	return nil
+}
+
+func testArrayObject(expected []int, obj object.Object) error {
+	array, ok := obj.(*object.Array)
+	if !ok {
+		return fmt.Errorf("object is not Array. got=%T (%+v)",
+			obj, obj)
+	}
+
+	if len(array.Elements) != len(expected) {
+		return fmt.Errorf("wrong num of elements. got=%d, want=%d",
+			len(array.Elements), len(expected))
+	}
+
+	for i, expectedElem := range expected {
+		if err := testIntegerObject(int64(expectedElem), array.Elements[i]); err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func testHashObject(expected map[object.HashKey]int64, obj object.Object) error {
+	hash, ok := obj.(*object.Hash)
+	if !ok {
+		return fmt.Errorf("object is not Hash. got=%T (%+v)",
+			obj, obj)
+	}
+
+	if len(hash.Pairs) != len(expected) {
+		return fmt.Errorf("wrong num of elements. got=%d, want=%d",
+			len(hash.Pairs), len(expected))
+	}
+
+	for expectedKey, expectedValue := range expected {
+		pair, exist := hash.Pairs[expectedKey]
+		if !exist {
+			return fmt.Errorf("no pair for given key in Pairs. got key=%+v", expectedKey)
+		}
+		if err := testIntegerObject(expectedValue, pair.Value); err != nil {
+			return err
+		}
 	}
 	return nil
 }
