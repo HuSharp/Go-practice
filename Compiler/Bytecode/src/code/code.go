@@ -68,6 +68,9 @@ const (
 	OpArray
 	OpHash
 	OpIndex
+	OpCall
+	OpReturnValue
+	OpReturn
 )
 
 type Definition struct {
@@ -103,6 +106,13 @@ var definitions = map[Opcode]*Definition{
 	OpArray: {"OpArray", []int{2}},
 	OpHash:  {"OpHash", []int{2}},
 	OpIndex: {"OpIndex", []int{}},
+	// Function
+	// OpCall tells the VM to start executing the *object.CompiledFunction sitting on top of the stack.
+	// OpReturnValue tells the VM to return the value on top of the stack to the calling context and to resume execution there.
+	// OpReturn excepts that there is no explicit value to return but an implicit vm.Null.
+	OpCall:        {"OpCall", []int{1}},
+	OpReturnValue: {"OpReturnValue", []int{}},
+	OpReturn:      {"OpReturn", []int{}},
 }
 
 func Lookup(op byte) (*Definition, error) {
