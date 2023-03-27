@@ -55,3 +55,5 @@ For Closure
 
 for `if (true) { 10 } else { 20 }; 3333;` We will get opCode like that:
 ![condition_opcode.png](condition_opcode.png)
+
+fix bug
