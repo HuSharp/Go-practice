@@ -45,12 +45,10 @@ func New(opts ...CreateOption) *Compiler {
 	}
 
 	compiler := &Compiler{
-		constants:           []object.Object{},
-		lastInstruction:     EmittedInstruction{},
-		previousInstruction: EmittedInstruction{},
-		symbolTable:         NewSymbolTable(),
-		scopes:              []CompilationScope{mainScope},
-		scopeIndex:          0,
+		constants:   []object.Object{},
+		symbolTable: NewSymbolTable(),
+		scopes:      []CompilationScope{mainScope},
+		scopeIndex:  0,
 	}
 	for _, opt := range opts {
 		opt(compiler)

@@ -160,7 +160,6 @@ func ReadOperands(def *Definition, ins Instructions) ([]int, int) {
 		switch width {
 		case 2:
 			operands[i] = int(ReadUint16(ins[offset:]))
-			fmt.Println("read ", ReadUint16(ins[offset:]))
 		}
 		offset += width
 	}

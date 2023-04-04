@@ -803,8 +803,8 @@ func testConstants(
 	actual []object.Object,
 ) error {
 	if len(expected) != len(actual) {
-		return fmt.Errorf("wrong number of constants. got=%d, want=%d",
-			len(actual), len(expected))
+		return fmt.Errorf("wrong number of constants.\nwant: %q\n got: %q",
+			expected, actual)
 	}
 
 	for i, constant := range expected {
