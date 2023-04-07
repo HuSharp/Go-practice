@@ -166,6 +166,7 @@ type Hashable interface {
 // and to pass them from the compiler to the VM as part of the bytecode, as a constant.
 type CompiledFunction struct {
 	Instructions code.Instructions
+	LocalNums    int
 }
 
 func (cf *CompiledFunction) Type() ObjectType { return COMPILED_FUNCTION_OBJ }

@@ -11,6 +11,7 @@ func TestMake(t *testing.T) {
 		// use 65534 not 65535 just for better identification
 		{OpConstant, []int{65534}, []byte{byte(OpConstant), 255, 254}},
 		{OpAdd, []int{}, []byte{byte(OpAdd)}},
+		{OpGetLocal, []int{255}, []byte{byte(OpGetLocal), 255}},
 	}
 
 	for _, tt := range tests {
@@ -60,6 +61,7 @@ func TestReadOperands(t *testing.T) {
 		bytesRead int
 	}{
 		{OpConstant, []int{65534}, 2},
+		{OpGetLocal, []int{255}, 1},
 	}
 
 	for _, tt := range tests {

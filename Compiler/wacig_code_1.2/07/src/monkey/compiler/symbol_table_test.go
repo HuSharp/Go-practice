@@ -121,19 +121,19 @@ func TestResolveNestedLocal(t *testing.T) {
 		{
 			firstLocal,
 			[]Symbol{
-				Symbol{Name: "a", Scope: GlobalScope, Index: 0},
-				Symbol{Name: "b", Scope: GlobalScope, Index: 1},
-				Symbol{Name: "c", Scope: LocalScope, Index: 0},
-				Symbol{Name: "d", Scope: LocalScope, Index: 1},
+				{Name: "a", Scope: GlobalScope, Index: 0},
+				{Name: "b", Scope: GlobalScope, Index: 1},
+				{Name: "c", Scope: LocalScope, Index: 0},
+				{Name: "d", Scope: LocalScope, Index: 1},
 			},
 		},
 		{
 			secondLocal,
 			[]Symbol{
-				Symbol{Name: "a", Scope: GlobalScope, Index: 0},
-				Symbol{Name: "b", Scope: GlobalScope, Index: 1},
-				Symbol{Name: "e", Scope: LocalScope, Index: 0},
-				Symbol{Name: "f", Scope: LocalScope, Index: 1},
+				{Name: "a", Scope: GlobalScope, Index: 0},
+				{Name: "b", Scope: GlobalScope, Index: 1},
+				{Name: "e", Scope: LocalScope, Index: 0},
+				{Name: "f", Scope: LocalScope, Index: 1},
 			},
 		},
 	}
