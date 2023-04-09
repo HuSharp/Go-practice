@@ -191,11 +191,18 @@ func (vm *VM) Run() error {
 			}
 		case code.OpCall:
 			vm.currentFrame().ip += 1
-			fn, ok := vm.stack[vm.sp-1].(*object.CompiledFunction)
+			numArgs := code.ReadUint8(ins[ip+1:])
+			fn, ok := vm.stack[vm.sp-1-int(numArgs)].(*object.CompiledFunction)
 			if !ok {
 				return fmt.Errorf("calling non-function")
 			}
-			frame := NewFrame(fn, vm.sp)
+
+			if int(numArgs) != fn.ParameterNums {
+				return fmt.Errorf("wrong number of arguments: want=%d, got=%d", fn.ParameterNums, numArgs)
+			}
+			// Need to make basePointer as vm.sp-int(numArgs)
+			// TODO why?
+			frame := NewFrame(fn, vm.sp-int(numArgs))
 			vm.pushFrame(frame)
 			vm.sp = frame.basePointer + fn.LocalNums
 		case code.OpReturnValue:

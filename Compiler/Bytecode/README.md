@@ -55,3 +55,21 @@ For Closure
 
 for `if (true) { 10 } else { 20 }; 3333;` We will get opCode like that:
 ![condition_opcode.png](condition_opcode.png)
+
+for local binding function
+```python
+>> let oneAndTwo = fn() { let one = 1; let two = 2; one + two; };
+CompiledFunction[0x1400013a100]
+>> oneAndTwo();
+3
+```
+
+![function_local_binding.png](function_local_binding.png)
+
+for function with arguments.
+And arguments to function calls are a special case of local bindings.
+```python
+
+```
+
+![function_with_args.png](function_with_args.png)

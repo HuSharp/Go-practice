@@ -16,6 +16,7 @@ const PROMPT = ">> "
 func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
 
+	var constants []object.Object
 	symbolTable := compiler.NewSymbolTable()
 	globalObjects := make([]object.Object, vm.GlobalsSize)
 	for {
@@ -35,13 +36,16 @@ func Start(in io.Reader, out io.Writer) {
 			continue
 		}
 
-		comp := compiler.New(compiler.WithSymbolTable(symbolTable))
+		comp := compiler.New(compiler.WithSymbolTable(symbolTable), compiler.WithConstants(constants))
 		if err := comp.Compile(program); err != nil {
 			fmt.Fprintf(out, "Woops! Compilation failed:\n %s\n", err)
 			continue
 		}
 
-		machine := vm.New(comp.Bytecode(), vm.WithGlobalObjects(globalObjects))
+		code := comp.Bytecode()
+		constants = code.Constants
+
+		machine := vm.New(code, vm.WithGlobalObjects(globalObjects))
 		if err := machine.Run(); err != nil {
 			fmt.Fprintf(out, "Woops! Executing bytecode failed:\n %s\n", err)
 			continue
