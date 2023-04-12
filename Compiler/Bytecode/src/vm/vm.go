@@ -192,19 +192,10 @@ func (vm *VM) Run() error {
 		case code.OpCall:
 			vm.currentFrame().ip += 1
 			numArgs := code.ReadUint8(ins[ip+1:])
-			fn, ok := vm.stack[vm.sp-1-int(numArgs)].(*object.CompiledFunction)
-			if !ok {
-				return fmt.Errorf("calling non-function")
-			}
 
-			if int(numArgs) != fn.ParameterNums {
-				return fmt.Errorf("wrong number of arguments: want=%d, got=%d", fn.ParameterNums, numArgs)
+			if err := vm.executeCall(int(numArgs)); err != nil {
+				return err
 			}
-			// Need to make basePointer as vm.sp-int(numArgs)
-			// TODO why?
-			frame := NewFrame(fn, vm.sp-int(numArgs))
-			vm.pushFrame(frame)
-			vm.sp = frame.basePointer + fn.LocalNums
 		case code.OpReturnValue:
 			returnValue := vm.pop()
 
@@ -221,8 +212,63 @@ func (vm *VM) Run() error {
 			if err := vm.push(Null); err != nil {
 				return err
 			}
+		case code.OpGetBuiltin:
+			builtinIndex := code.ReadUint8(ins[ip+1:])
+			vm.currentFrame().ip += 1
+
+			builtin := object.Builtins[builtinIndex]
+
+			if err := vm.push(builtin.Fn); err != nil {
+				return err
+			}
 		}
 	}
+	return nil
+}
+
+func (vm *VM) executeCall(numArgs int) error {
+	callee := vm.stack[vm.sp-1-numArgs]
+	switch callee := callee.(type) {
+	case *object.Builtin:
+		return vm.callBuiltin(callee, numArgs)
+	case *object.CompiledFunction:
+		return vm.callFunc(callee, numArgs)
+	default:
+		return fmt.Errorf("calling non-function and non-builtin")
+	}
+}
+
+func (vm *VM) callFunc(fn *object.CompiledFunction, numArgs int) error {
+	if numArgs != fn.ParameterNums {
+		return fmt.Errorf("wrong number of arguments: want=%d, got=%d", fn.ParameterNums, numArgs)
+	}
+	// Need to make basePointer as vm.sp-numArgs
+	// TODO why?
+	frame := NewFrame(fn, vm.sp-numArgs)
+	vm.pushFrame(frame)
+	vm.sp = frame.basePointer + fn.LocalNums
+
+	return nil
+}
+
+func (vm *VM) callBuiltin(fn *object.Builtin, numArgs int) error {
+	// Need to make basePointer as vm.sp-numArgs
+	// TODO why?
+	args := vm.stack[vm.sp-numArgs : vm.sp]
+
+	result := fn.Fn(args...)
+	vm.sp -= numArgs + 1
+
+	if result != nil {
+		if err := vm.push(result); err != nil {
+			return err
+		}
+	} else {
+		if err := vm.push(Null); err != nil {
+			return err
+		}
+	}
+
 	return nil
 }
 

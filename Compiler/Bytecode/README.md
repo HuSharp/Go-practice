@@ -69,7 +69,30 @@ CompiledFunction[0x1400013a100]
 for function with arguments.
 And arguments to function calls are a special case of local bindings.
 ```python
-
+>> let newAdder = fn(x) { x }
+CompiledFunction[0x140001064b0]
+>> newAdder(1)
+1
+>> newAdder(2)
+2
 ```
 
 ![function_with_args.png](function_with_args.png)
+
+for built-in function
+```python
+>> let array = [1, 2, 3];
+[1, 2, 3]
+>> len(array);
+3
+>> push(array, 1)
+[1, 2, 3, 1]
+>> first(array)
+1
+>> rest(array)
+[2, 3]
+>> last(array)
+3
+>> first(rest(push(array, 4)))
+2
+```

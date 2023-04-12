@@ -73,6 +73,7 @@ const (
 	OpReturn
 	OpGetLocal
 	OpSetLocal
+	OpGetBuiltin
 )
 
 type Definition struct {
@@ -118,6 +119,8 @@ var definitions = map[Opcode]*Definition{
 	// Local Variable
 	OpGetLocal: {"OpGetLocal", []int{1}},
 	OpSetLocal: {"OpSetLocal", []int{1}},
+	// OpGetBuiltin tells the VM to push the *object.BuiltinFunction object onto the stack.
+	OpGetBuiltin: {"OpGetBuiltin", []int{1}},
 }
 
 func Lookup(op byte) (*Definition, error) {

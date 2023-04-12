@@ -399,6 +399,51 @@ func TestCallingFunctionsWithWrongArguments(t *testing.T) {
 	}
 }
 
+func TestBuiltinFunctions(t *testing.T) {
+	tests := []vmTestCase{
+		{`len("")`, 0},
+		{`len("four")`, 4},
+		{`len("hello world")`, 11},
+		{
+			`len(1)`,
+			&object.Error{
+				Message: "argument to `len` not supported, got INTEGER",
+			},
+		},
+		{`len("one", "two")`,
+			&object.Error{
+				Message: "wrong number of arguments. got=2, want=1",
+			},
+		},
+		{`len([1, 2, 3])`, 3},
+		{`len([])`, 0},
+		{`puts("hello", "world!")`, Null},
+		{`first([1, 2, 3])`, 1},
+		{`first([])`, Null},
+		{`first(1)`,
+			&object.Error{
+				Message: "argument to `first` must be ARRAY, got INTEGER",
+			},
+		},
+		{`last([1, 2, 3])`, 3},
+		{`last([])`, Null},
+		{`last(1)`,
+			&object.Error{
+				Message: "argument to `last` must be ARRAY, got INTEGER",
+			},
+		},
+		{`rest([1, 2, 3])`, []int{2, 3}},
+		{`rest([])`, Null},
+		{`push([], 1)`, []int{1}},
+		{`push(1, 1)`,
+			&object.Error{
+				Message: "argument to `push` must be ARRAY, got INTEGER",
+			},
+		},
+	}
+	runVmTests(t, tests)
+}
+
 func runVmTests(t *testing.T, tests []vmTestCase) {
 	t.Helper()
 	for _, tt := range tests {
@@ -431,24 +476,29 @@ func testExpectedObject(t *testing.T,
 		}
 	case string:
 		if err := testStringObject(expected, actual); err != nil {
-			t.Errorf("testIntegerObject failed: %s", err)
+			t.Errorf("testStringObject failed: %s", err)
 		}
 	case bool:
 		if err := testBooleanObject(expected, actual); err != nil {
-			t.Errorf("testIntegerObject failed: %s", err)
+			t.Errorf("testBooleanObject failed: %s", err)
 		}
 	case []int:
 		if err := testArrayObject(expected, actual); err != nil {
-			t.Errorf("testIntegerObject failed: %s", err)
+			t.Errorf("testArrayObject failed: %s", err)
 		}
 	case map[object.HashKey]int64:
 		if err := testHashObject(expected, actual); err != nil {
-			t.Errorf("testIntegerObject failed: %s", err)
+			t.Errorf("testHashObject failed: %s", err)
 		}
 	case *object.NULL:
 		if actual != Null {
 			t.Errorf("object is not Null: %T (%+v)", actual, actual)
 		}
+	case *object.Error:
+		if err := testErrorObject(expected, actual); err != nil {
+			t.Errorf("testErrorObject failed: %s", err)
+		}
+
 	}
 }
 
@@ -531,6 +581,20 @@ func testHashObject(expected map[object.HashKey]int64, obj object.Object) error 
 		if err := testIntegerObject(expectedValue, pair.Value); err != nil {
 			return err
 		}
+	}
+	return nil
+}
+
+func testErrorObject(expected *object.Error, obj object.Object) error {
+	errObj, ok := obj.(*object.Error)
+	if !ok {
+		return fmt.Errorf("object is not Error. got=%T (%+v)",
+			obj, obj)
+	}
+
+	if errObj.Message != expected.Message {
+		return fmt.Errorf("wrong error message. expected=%q, got=%q",
+			expected.Message, errObj.Message)
 	}
 	return nil
 }
