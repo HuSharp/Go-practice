@@ -96,3 +96,39 @@ for built-in function
 >> first(rest(push(array, 4)))
 2
 ```
+
+for closure
+```python
+
+```
+
+for recursion closure to impl map
+```python
+let map = fn(arr, f) {
+    let iter = fn(arr, accumulated) {
+        if (len(arr) == 0) { 
+            accumulated
+        } else {
+            iter(rest(arr), push(accumulated, f(first(arr))));
+        } 
+    };
+    
+    iter(arr, []);
+    };
+```
+
+for recursion closure to calculate fibonacci
+```python
+		let fibonacci = fn(x) {
+			if (x == 0) {
+				return 0;
+			} else {
+				if (x == 1) {
+					return 1;
+				} else {
+					fibonacci(x - 1) + fibonacci(x - 2);
+				}
+			}
+		};
+		fibonacci(15);
+```

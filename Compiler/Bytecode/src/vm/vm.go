@@ -44,7 +44,8 @@ const MaxFrames = 1024
 func New(bytecode *compiler.Bytecode, opts ...CreateOption) *VM {
 	// main frame that contains the bytecode.Instructions, which make up the whole Monkey program
 	mainFunc := &object.CompiledFunction{Instructions: bytecode.Instructions}
-	mainFrame := NewFrame(mainFunc, 0)
+	mainClosure := &object.Closure{Fn: mainFunc}
+	mainFrame := NewFrame(mainClosure, 0)
 
 	frames := make([]*Frame, MaxFrames)
 	frames[0] = mainFrame
@@ -221,6 +222,28 @@ func (vm *VM) Run() error {
 			if err := vm.push(builtin.Fn); err != nil {
 				return err
 			}
+		case code.OpClosure:
+			constIndex := code.ReadUint16(ins[ip+1:])
+			// ignore parameter now
+			freeNums := code.ReadUint8(ins[ip+3:])
+			vm.currentFrame().ip += 3
+
+			if err := vm.pushClosure(int(constIndex), int(freeNums)); err != nil {
+				return err
+			}
+		case code.OpGetFree:
+			freeIndex := code.ReadUint8(ins[ip+1:])
+			vm.currentFrame().ip += 1
+
+			currentClosure := vm.currentFrame().cl
+			if err := vm.push(currentClosure.Free[freeIndex]); err != nil {
+				return err
+			}
+		case code.OpCurrentClosure:
+			currentClosure := vm.currentFrame().cl
+			if err := vm.push(currentClosure); err != nil {
+				return err
+			}
 		}
 	}
 	return nil
@@ -231,22 +254,22 @@ func (vm *VM) executeCall(numArgs int) error {
 	switch callee := callee.(type) {
 	case *object.Builtin:
 		return vm.callBuiltin(callee, numArgs)
-	case *object.CompiledFunction:
-		return vm.callFunc(callee, numArgs)
+	case *object.Closure:
+		return vm.callClosure(callee, numArgs)
 	default:
 		return fmt.Errorf("calling non-function and non-builtin")
 	}
 }
 
-func (vm *VM) callFunc(fn *object.CompiledFunction, numArgs int) error {
-	if numArgs != fn.ParameterNums {
-		return fmt.Errorf("wrong number of arguments: want=%d, got=%d", fn.ParameterNums, numArgs)
+func (vm *VM) callClosure(cl *object.Closure, numArgs int) error {
+	if numArgs != cl.Fn.ParameterNums {
+		return fmt.Errorf("wrong number of arguments: want=%d, got=%d", cl.Fn.ParameterNums, numArgs)
 	}
 	// Need to make basePointer as vm.sp-numArgs
 	// TODO why?
-	frame := NewFrame(fn, vm.sp-numArgs)
+	frame := NewFrame(cl, vm.sp-numArgs)
 	vm.pushFrame(frame)
-	vm.sp = frame.basePointer + fn.LocalNums
+	vm.sp = frame.basePointer + cl.Fn.LocalNums
 
 	return nil
 }
@@ -272,6 +295,7 @@ func (vm *VM) callBuiltin(fn *object.Builtin, numArgs int) error {
 	return nil
 }
 
+// Frame
 func (vm *VM) currentFrame() *Frame {
 	return vm.frames[vm.framesIndex-1]
 }
@@ -284,6 +308,23 @@ func (vm *VM) pushFrame(f *Frame) {
 func (vm *VM) popFrame() *Frame {
 	vm.framesIndex--
 	return vm.frames[vm.framesIndex]
+}
+
+// Closure
+func (vm *VM) pushClosure(constIndex, freeNums int) error {
+	constant := vm.constants[constIndex]
+	fn, ok := constant.(*object.CompiledFunction)
+	if !ok {
+		return fmt.Errorf("not a function: %T", constant)
+	}
+	free := make([]object.Object, freeNums)
+	for i := 0; i < freeNums; i++ {
+		free[i] = vm.stack[vm.sp-freeNums+i]
+	}
+	vm.sp -= freeNums
+
+	closure := &object.Closure{Fn: fn, Free: free}
+	return vm.push(closure)
 }
 
 func (vm *VM) StackTop() object.Object {
