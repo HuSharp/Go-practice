@@ -1,39 +1,36 @@
 
 
-Show Code
+## Show Features
 
 ```python
-Welcome to Monkey Language!
+Welcome to be friends with HuSharp's Rabbit!
 >> let x = 1 * 2 * 3 * 4 * 5
-let x = ((((1 * 2) * 3) * 4) * 5);
+120
 >> x * y / 2 + 3 * 8 - 123
-((((x * y) / 2) + (3 * 8)) - 123)
+Woops! Compilation failed:
+ undefined variable y
 >> true == false
-(true == false)
->> let x 12 * 3;
-            __,__
-   .--.  .-"     "-.  .--.
-  / .. \/  .-. .-.  \/ .. \
- | |  '|  /   Y   \  |'  | |
- | \   \  \ 0 | 0 /  /   / |
-  \ '- ,\.-"""""""-./, -' /
-   ''-' /_   ^ ^   _\ '-''
-       |  \._   _./  |
-       \   \ '~' /   /
-        '._ '-=-' _.'
-           '-----'
-Woops! We ran into some monkey business here!
+false
+>>  let x 12 * 3;
+                 
+       /\_/\
+       || ||  	
+      ( o.o )
+        >^<
+       /   \
+Woops! We jumped down the rabbit hole!
  parser errors:
 	expected next token to be =, got INT instead
->> 
 ```
 
 For Function
 ```python
- >> let addTwo = fn(x) { x + 2; };
+>> let addTwo = fn(x) { x + 2; };
+Closure[...] 
 >> addTwo(2)
 4
 >> let multiply = fn(x, y) { x * y };
+Closure[...]
 >> multiply(50 / 2, 1 * 2)
 50
 >> fn(x) { x == 10 }(5)
@@ -42,18 +39,7 @@ false
 true
 ```
 
-For Closure
-```python
->> let add = fn(a, b) { a + b };
->> let sub = fn(a, b) { a - b };
->> let applyFunc = fn(a, b, func) { func(a, b) };
->> applyFunc(2, 2, add);
-4
->> applyFunc(10, 2, sub);
-8
-```
-
-for `if (true) { 10 } else { 20 }; 3333;` We will get opCode like that:
+for If expression. such as`if (true) { 10 } else { 20 }; 3333;` We will get opCode like that:
 ![condition_opcode.png](condition_opcode.png)
 
 for local binding function
@@ -97,11 +83,6 @@ for built-in function
 2
 ```
 
-for closure
-```python
-
-```
-
 for recursion closure to impl map
 ```python
 let map = fn(arr, f) {
@@ -131,4 +112,16 @@ for recursion closure to calculate fibonacci
 			}
 		};
 		fibonacci(15);
+```
+
+## Test Performance
+```python
+$ ./fibonacci -engine=eval                                                                                                 [8:37:35]
+engine=eval, result=9227465, duration=11.327551667s
+
+$ ./fibonacci -engine=vm                                                                                                   [8:38:23]
+engine=vm, result=9227465, duration=3.907876125s
+
+
+2.90 times faster
 ```
