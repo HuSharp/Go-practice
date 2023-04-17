@@ -116,10 +116,10 @@ for recursion closure to calculate fibonacci
 
 ## Test Performance
 ```python
-$ ./fibonacci -engine=eval                                                                                                 [8:37:35]
+$ ./fibonacci -engine=eval
 engine=eval, result=9227465, duration=11.327551667s
 
-$ ./fibonacci -engine=vm                                                                                                   [8:38:23]
+$ ./fibonacci -engine=vm
 engine=vm, result=9227465, duration=3.907876125s
 
 
