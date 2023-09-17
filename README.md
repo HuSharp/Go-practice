@@ -27,9 +27,9 @@ That’s not only immensely fun to build but also one of the most common interpr
 
 Besides providing a new layer of abstraction —— the bytecode that’s passed from the compiler to the virtual machine – that makes the system more modular, the main appeal of this architecture lies in its performance. Bytecode interpreters are fast.
 
-- ![compiler_parts.png](./assets/compiler_parts.png)
+![compiler_parts.png](./assets/compiler_parts.png)
   - In terms of data structures, you can see that there will be quite a few transformations until we end up with the 3 as our result:
-  - ![transformations_to_3.png](./assets/transformations_to_3.png)
+  ![transformations_to_3.png](./assets/transformations_to_3.png)
 
 Finally Compiler has three times faster – without low-level tweaking or extensive optimizations than Interpreter. You can get at `./Compiler/benchmark/fibonacci` to check.
 
